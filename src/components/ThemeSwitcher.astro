@@ -1,0 +1,116 @@
+---
+// 主题切换器：模式（亮/暗/系统）+ 调色板（6 色）
+// 防闪烁脚本在 BaseLayout 的 <head> 同步执行
+---
+
+<div class="theme-switcher">
+  <button class="theme-toggle" aria-label="切换主题" id="themeToggle">
+    <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
+  <div class="theme-panel" id="themePanel" hidden>
+    <div class="theme-section">
+      <div class="theme-label">模式</div>
+      <div class="mode-options">
+        <button class="mode-btn" data-mode="light">☀ 亮</button>
+        <button class="mode-btn" data-mode="dark">☾ 暗</button>
+        <button class="mode-btn" data-mode="system">⌘ 系统</button>
+      </div>
+    </div>
+    <div class="theme-section">
+      <div class="theme-label">配色</div>
+      <div class="palette-options">
+        <button class="palette-btn" data-palette="blue"   style="background:#3b82f6" aria-label="蓝"></button>
+        <button class="palette-btn" data-palette="green"  style="background:#10b981" aria-label="绿"></button>
+        <button class="palette-btn" data-palette="orange" style="background:#f97316" aria-label="橙"></button>
+        <button class="palette-btn" data-palette="purple" style="background:#a855f7" aria-label="紫"></button>
+        <button class="palette-btn" data-palette="pink"   style="background:#ec4899" aria-label="粉"></button>
+        <button class="palette-btn" data-palette="mono"   style="background:#525252" aria-label="单色"></button>
+      </div>
+    </div>
+    <button class="reset-btn">重置默认</button>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    'use strict';
+    const root = document.documentElement;
+    const STORAGE_MODE = 'theme-mode';
+    const STORAGE_PALETTE = 'theme-palette';
+
+    const toggle = document.getElementById('themeToggle');
+    const panel = document.getElementById('themePanel');
+    if (!toggle || !panel) return;
+
+    const getStoredMode = () => localStorage.getItem(STORAGE_MODE);
+    const getStoredPalette = () => localStorage.getItem(STORAGE_PALETTE);
+
+    function syncModeUI() {
+      const current = getStoredMode() ?? 'system';
+      panel.querySelectorAll('.mode-btn').forEach((b) => {
+        b.classList.toggle('active', b.dataset.mode === current);
+      });
+    }
+    function syncPaletteUI() {
+      const current = getStoredPalette() ?? 'blue';
+      panel.querySelectorAll('.palette-btn').forEach((b) => {
+        b.classList.toggle('active', b.dataset.palette === current);
+      });
+    }
+
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      panel.hidden = !panel.hidden;
+    });
+    panel.addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('click', () => { panel.hidden = true; });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') panel.hidden = true; });
+
+    panel.querySelectorAll('.mode-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.mode;
+        if (mode === 'system') {
+          localStorage.removeItem(STORAGE_MODE);
+          root.dataset.mode = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+          root.dataset.mode = mode;
+          localStorage.setItem(STORAGE_MODE, mode);
+        }
+        syncModeUI();
+      });
+    });
+
+    panel.querySelectorAll('.palette-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        root.dataset.palette = btn.dataset.palette;
+        localStorage.setItem(STORAGE_PALETTE, btn.dataset.palette);
+        syncPaletteUI();
+      });
+    });
+
+    const resetBtn = panel.querySelector('.reset-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_MODE);
+        localStorage.removeItem(STORAGE_PALETTE);
+        root.dataset.mode = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        root.dataset.palette = 'blue';
+        syncModeUI();
+        syncPaletteUI();
+      });
+    }
+
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!getStoredMode()) root.dataset.mode = e.matches ? 'dark' : 'light';
+    });
+
+    syncModeUI();
+    syncPaletteUI();
+  })();
+</script>

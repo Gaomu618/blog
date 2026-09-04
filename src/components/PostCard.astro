@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, tags } = post.data;
+const date = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<article class="post-card">
+  <div class="post-meta">
+    <time datetime={pubDate.toISOString()}>{date}</time>
+    {tags.length > 0 && (
+      <>
+        <span class="dot">·</span>
+        <span class="tags">
+          {tags.map((tag) => <a href={`/tags/${tag}/`}>{tag}</a>)}
+        </span>
+      </>
+    )}
+  </div>
+  <h3 class="post-title">
+    <a href={`/posts/${post.id}/`}>{title}</a>
+  </h3>
+  <p class="post-excerpt">{description}</p>
+</article>

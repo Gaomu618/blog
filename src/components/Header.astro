@@ -1,0 +1,27 @@
+---
+import { NAV_LINKS, SITE_TITLE } from '../consts';
+import ThemeSwitcher from './ThemeSwitcher.astro';
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+};
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">{SITE_TITLE}</a>
+    <nav class="nav">
+      {NAV_LINKS.map((link) => (
+        <a
+          href={link.href}
+          class:list={['nav-link', { active: isActive(link.href) }]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <ThemeSwitcher />
+  </div>
+</header>

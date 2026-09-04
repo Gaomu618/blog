@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 10);
+---
+
+<BaseLayout>
+  <section class="container hero">
+    <h1 class="hero-title">{SITE_TITLE}</h1>
+    <p class="hero-subtitle">{SITE_DESCRIPTION}</p>
+    <div class="hero-rule"></div>
+  </section>
+
+  <section class="container posts">
+    <h2 class="section-title">最新文章</h2>
+    {posts.map((post) => <PostCard post={post} />)}
+    <a href="/posts/" class="more-link">→ 查看所有文章</a>
+  </section>
+</BaseLayout>

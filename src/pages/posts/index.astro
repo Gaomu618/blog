@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+// 按年分组
+const groupedByYear = posts.reduce((acc, post) => {
+  const year = post.data.pubDate.getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(post);
+  return acc;
+}, {} as Record<number, CollectionEntry<'blog'>[]>);
+
+const years = Object.keys(groupedByYear).map(Number).sort((a, b) => b - a);
+---
+
+<BaseLayout title="归档" description="所有文章按年份归档">
+  <section class="container archive">
+    <h1 style="font-size: var(--text-4xl); font-weight: 700; margin-bottom: var(--space-12); letter-spacing: -0.02em;">所有文章 ({posts.length})</h1>
+
+    {posts.length === 0 ? (
+      <p class="archive-empty">还没有文章。</p>
+    ) : (
+      years.map((year) => (
+        <>
+          <h2 class="archive-year">{year} ({groupedByYear[year].length})</h2>
+          <ul class="archive-list">
+            {groupedByYear[year].map((post) => {
+              const date = post.data.pubDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
+              return (
+                <li class="archive-item">
+                  <span class="archive-date">{date}</span>
+                  <a href={`/posts/${post.id}/`} class="archive-title">{post.data.title}</a>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      ))
+    )}
+  </section>
+</BaseLayout>
