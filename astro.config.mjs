@@ -3,8 +3,8 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
 
-// ⚠️ 部署前改成你的真实域名
-const SITE = 'https://blog.example.com';
+// Cloudflare Pages 部署地址
+const SITE = 'https://blog-6d5.pages.dev';
 
 export default defineConfig({
   site: SITE,
