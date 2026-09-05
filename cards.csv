@@ -1,0 +1,42 @@
+﻿问题,答案
+Spring 的两个核心机制是什么?,"IoC(控制反转,容器管理对象)+ AOP(面向切面,把横切代码抽出去)"
+Spring Boot 跟 Spring 相比最大的便利是?,"自带 Tomcat,打成 JAR java -jar 直接跑,不用部署外部 Tomcat"
+Spring Boot 3.x 最低要哪个 JDK 版本?,JDK 17
+@SpringBootApplication 注解等于哪三个注解合起来?,@Configuration + @EnableAutoConfiguration + @ComponentScan
+创建 Spring Boot 项目最常用的网站是?,https://start.spring.io/ (Spring Initializr)
+spring-boot-starter-web 这一个依赖实际引入了哪些东西?,Spring MVC + 内嵌 Tomcat + Jackson(JSON 解析)
+Spring Boot 启动时大概做哪几件事?,读配置 → 扫包找注解 → 自动装配 Bean → 启 Tomcat → 监听端口
+Spring Boot 默认 Web 端口是多少?怎么改?,8080;在 application.properties 里加 server.port=9090
+spring-boot-devtools 是干什么的?,"热部署,改完代码自动重启,不用手动停启"
+Spring Boot 部署 JAR 和 WAR 的核心区别?,"JAR 自带 Tomcat,java -jar 跑;WAR 要外部 Tomcat 装在 webapps"
+Spring Boot 默认的全局配置文件名是?,"application.properties 或 application.yml (二选一,不能两个同时用)"
+yml 相比 properties 的 3 个优势?,1) 层级结构清晰 2) 能写列表 3) 自动识别 int/bool/list 类型
+@Value 注入配置的语法是?,"@Value(""${配置 key}"") 读配置;@Value(""#{SpEL 表达式}"") 算 SpEL"
+@ConfigurationProperties 的 prefix 属性干啥?,"指定配置前缀,把该前缀下所有子属性批量绑到 Bean 的字段"
+@Value 和 @ConfigurationProperties 怎么选?,单个零散值用 @Value;一组相关字段(尤其需要校验或松散绑定)用 @ConfigurationProperties
+@ConfigurationProperties 启用数据校验要加哪两个注解?,"类上加 @Validated,字段上加 JSR-303 注解(如 @NotBlank / @Min)"
+@PropertySource 能读 yml 文件吗?,"不能,只能读 .properties"
+Spring Boot 多环境配置最推荐的方式?,"多文件方式 —— application-{profile}.yml,用 spring.profiles.active 激活"
+命令行怎么激活 prod 环境?,java -jar app.jar --spring.profiles.active=prod
+@Profile 注解的作用?,"标记 Bean 只在指定 Profile 环境下才被注册到容器,常用于""同一接口,不同环境用不同实现"""
+Java Web 三大组件是什么?,Servlet(处理请求) + Filter(拦截请求/响应) + Listener(监听 Web 事件)
+注册 Filter 的两种方式?,"1) @WebFilter + @ServletComponentScan;2) FilterRegistrationBean(更灵活,能控顺序和 URL)"
+Spring MVC 默认从哪些目录找静态资源?,/static/、/public/、/resources/、/META-INF/resources/ (在 classpath 下)
+自定义 Spring MVC 要实现哪个接口?,WebMvcConfigurer (addResourceHandlers/addViewControllers/addInterceptors)
+WebMvcConfigurer 的 addInterceptors 接收什么参数?,"InterceptorRegistry,用来 addInterceptor().addPathPatterns().excludePathPatterns()"
+HandlerInterceptor 三个回调方法的执行顺序?,"preHandle(Controller 前) → Controller 执行 → postHandle(Controller 后,渲染前) → afterCompletion(渲染后)"
+preHandle 返回 false 会怎样?,"拦截请求,后续的 Controller 和 afterCompletion 都不执行"
+Filter 和 Interceptor 的核心区别?,"Filter 是 Servlet 规范,所有 Web 框架都有,DispatcherServlet 之前触发;Interceptor 是 Spring MVC 独有,DispatcherServlet 之后、Controller 之前触发"
+"Spring Boot 文件上传,application.yml 的配置项是?",spring.servlet.multipart.max-file-size(单文件) 和 max-request-size(整个请求)
+文件上传的 form 表单必须设置什么 enctype?,multipart/form-data
+@ControllerAdvice + @ExceptionHandler 怎么用?,"@ControllerAdvice 标全局类,@ExceptionHandler(异常类型.class) 标方法,捕获指定类型异常返回统一响应"
+Spring Boot 3.x 官方推荐哪个模板引擎?,Thymeleaf
+"Thymeleaf 最大特点""自然模板""是啥意思?","模板文件本质是合法 HTML,浏览器双击 .html 就能看到静态效果,不依赖 Servlet 容器;后端启动后才用 Thymeleaf 渲染"
+Thymeleaf 模板默认放哪个目录?后缀是?,"src/main/resources/templates/ ,后缀 .html (不要放 static/)"
+引入 Thymeleaf 的 starter 是哪个?,spring-boot-starter-thymeleaf
+"模板文件里 xmlns:th=""http://www.thymeleaf.org"" 这行有啥用?","声明 Thymeleaf 命名空间,IDE 才会给 th:* 属性的语法提示"
+th:text 和 th:utext 的区别?,"th:text 转义 HTML(把 < 变 &lt;);th:utext 不转义(直接输出 HTML,慎用,防 XSS)"
+th:each 怎么用?状态变量能拿到啥?,"th:each=""item, iter : ${list}"",iter 提供 count/index/first/last/even/odd"
+Thymeleaf 5 种表达式的符号和作用?,${} 变量 / *{} 选择(配合 th:object) / @{} URL / #{} 国际化消息 / ~{} 片段引用
+th:object 和 th:field 配合是干什么用的?,"表单对象绑定,th:object 标表单绑哪个对象,th:field 自动展开成 name+value 属性"
+@{} 表达式相比手写路径的优势?,"自动加 contextPath 和 URL 编码,避免硬编码,部署到子路径时不用改代码"

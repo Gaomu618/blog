@@ -2,7 +2,6 @@
 import type { CollectionEntry, MarkdownHeading } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import TOC from '../components/TOC.astro';
-import Giscus from '../components/Giscus.astro';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -55,8 +54,6 @@ const minutes = Math.max(1, Math.round(wordCount / 400));
           <a href={`/posts/${nextPost.id}/`} class="post-nav-next">{nextPost.title} →</a>
         ) : <span></span>}
       </nav>
-
-      <Giscus />
     </article>
 
     <TOC headings={headings} />
