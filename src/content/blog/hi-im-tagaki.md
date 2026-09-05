@@ -39,3 +39,25 @@ tags: [随笔]
 
 如果你也是 Java 学习者，欢迎一起交流；如果你路过看到错的地方，请不吝指教。
 我们下一篇见
+
+<!-- 下面这些 FLASH_CARD 块不会被博客渲染,只会被 generate_anki.py 提取成 Anki 卡片 -->
+
+<!-- FLASH_CARD
+Q: 博客主笔名是什么?
+A: Tagaki
+-->
+
+<!-- FLASH_CARD
+Q: 这个博客当前主要的学习方向是什么?
+A: Java 基础、Java 八股文、Spring Boot 注解
+-->
+
+<!-- FLASH_CARD
+Q: 我学 Java 的最终目标是什么?
+A: 找实习
+-->
+
+<!-- FLASH_CARD
+Q: 博客为什么不写"心得感悟的软文"和"抄书的概念解释"?
+A: 写了我也记不住
+-->
